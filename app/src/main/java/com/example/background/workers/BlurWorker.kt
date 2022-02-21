@@ -20,6 +20,7 @@ class BlurWorker(private val context: Context, params: WorkerParameters): Worker
     override fun doWork(): Result {
         val appContext = applicationContext
         makeStatusNotification("blurring", appContext)
+        sleep()
         val resourceUri = inputData.getString(KEY_IMAGE_URI)
         return try {
             if(TextUtils.isEmpty(resourceUri)){

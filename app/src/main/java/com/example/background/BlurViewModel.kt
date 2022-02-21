@@ -52,7 +52,7 @@ class BlurViewModel(application: Application) : ViewModel() {
     private fun createInputDataForUri() : Data {
         val dataBuilder = Data.Builder()
         imageUri?.let {
-            dataBuilder.putString("KEY_IMAGE_URI", imageUri.toString())
+            dataBuilder.putString(KEY_IMAGE_URI, imageUri.toString())
         }
         return dataBuilder.build()
     }
