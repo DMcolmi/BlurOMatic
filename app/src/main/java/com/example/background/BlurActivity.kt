@@ -16,11 +16,14 @@
 
 package com.example.background
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.WorkInfo
 import com.example.background.databinding.ActivityBlurBinding
+import java.util.*
 
 class BlurActivity : AppCompatActivity() {
 
@@ -37,6 +40,28 @@ class BlurActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.goButton.setOnClickListener { viewModel.applyBlur(blurLevel) }
+
+        viewModel.outputWorkInfos.observe(this) { listOfWorkInfo ->
+            if(listOfWorkInfo.isNullOrEmpty()){
+                return@observe
+            }
+            val workInfo = listOfWorkInfo[0]
+            if(workInfo.state.isFinished){
+                showWorkFinished()
+            } else {
+                showWorkInProgress()
+            }
+            workInfo.outputData.getString(KEY_IMAGE_URI)
+        }
+
+        binding.seeFileButton.setOnClickListener {
+            viewModel.outputUri?.let {
+                val actionView = Intent(Intent.ACTION_VIEW, it)
+                actionView.resolveActivity(packageManager)?.run {
+                    startActivity(actionView)
+                }
+            }
+        }
     }
 
     /**
@@ -70,4 +95,8 @@ class BlurActivity : AppCompatActivity() {
                 R.id.radio_blur_lv_3 -> 3
                 else -> 1
             }
+
+
+
+
 }
