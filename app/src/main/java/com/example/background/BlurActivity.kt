@@ -48,19 +48,27 @@ class BlurActivity : AppCompatActivity() {
             val workInfo = listOfWorkInfo[0]
             if(workInfo.state.isFinished){
                 showWorkFinished()
+                val uri = workInfo.outputData.getString(KEY_IMAGE_URI)
+                if(!uri.isNullOrBlank()){
+                    binding.seeFileButton.visibility = View.VISIBLE
+                    viewModel.setOutputUri(uri)
+                }
             } else {
                 showWorkInProgress()
             }
-            workInfo.outputData.getString(KEY_IMAGE_URI)
         }
 
         binding.seeFileButton.setOnClickListener {
             viewModel.outputUri?.let {
                 val actionView = Intent(Intent.ACTION_VIEW, it)
-                actionView.resolveActivity(packageManager)?.run {
+                actionView.resolveActivity(packageManager).run {
                     startActivity(actionView)
                 }
             }
+        }
+
+        binding.cancelButton.setOnClickListener {
+            viewModel.truncateWorkFlow()
         }
     }
 

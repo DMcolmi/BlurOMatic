@@ -37,7 +37,7 @@ class SaveImageToFileWorker(context: Context,workerParams: WorkerParameters ): W
                 resolver,bitmap,title,dateFormatter.format(Date())
             )
             if(!imageUrl.isNullOrEmpty()){
-                Result.success(workDataOf(KEY_IMAGE_URI to ""))
+                Result.success(workDataOf(KEY_IMAGE_URI to imageUrl))
             } else {
                 Log.e(TAG,"Writing to MediaStore failed")
                 Result.failure()

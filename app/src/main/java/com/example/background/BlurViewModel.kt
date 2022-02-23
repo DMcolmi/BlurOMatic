@@ -61,12 +61,19 @@ class BlurViewModel(application: Application) : ViewModel() {
             continuation = continuation.then(blurWorkRequest.build())
         }
 
+        val constraint = Constraints.Builder().setRequiresCharging(true).build()
+
         val saveImageWorker = OneTimeWorkRequestBuilder<SaveImageToFileWorker>()
             .addTag(TAG_OUTPUT)
+            .setConstraints(constraint)
             .build()
 
         continuation = continuation.then(saveImageWorker)
         continuation.enqueue()
+    }
+
+    internal fun truncateWorkFlow(){
+        workManager.cancelUniqueWork(IMAGE_MANIPULATION_WORK_NAME)
     }
 
     private fun createInputDataForUri() : Data {
@@ -99,7 +106,7 @@ class BlurViewModel(application: Application) : ViewModel() {
     }
 
     internal fun setOutputUri(outputImageUri: String?) {
-        outputUri = uriOrNull(outputImageUri)
+            outputUri = uriOrNull(outputImageUri)
     }
 
     class BlurViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
